@@ -37,7 +37,6 @@ def start(bot, update):
 def help(bot, update):
     bot.sendMessage(update.message.chat_id, "".join(commands))
 
-
 def schedule(bot, update):
     bot.sendMessage(update.message.chat_id, text='Расписание уроков: бла-бла-бла')
 
