@@ -18,6 +18,7 @@ bot.
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
+import json
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -29,13 +30,12 @@ logger = logging.getLogger(__name__)
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
-    txt = "<b>Hello</b>"
-    bot.sendMessage(update.message.chat_id, text=txt, parse_mode="HTML")
+    txt = "".join(description.readlines())
+    bot.sendMessage(update.message.chat_id, text="<b>" + txt + "</b>", parse_mode="HTML")
 
 
 def help(bot, update):
-    bot.sendMessage(update.message.chat_id, text="Доступные команды бота:")
-    bot
+    bot.sendMessage(update.message.chat_id, "".join(commands))
 
 
 def schedule(bot, update):
@@ -43,20 +43,16 @@ def schedule(bot, update):
 
 
 def text_echo(bot, update):
-    print(update.message)
-    print(type(update.message))
-    print(update.message["from"])
     mess = update.message.text
-    if mess.lower() == "hello" or mess.lower() == "привет":
-            # print(update.message.From.username)
-        bot.sendMessage(update.message.chat_id, text='Hi-hi')
-        bot.sendSticker(update.message.chat_id, "BQADAgADQAADyIsGAAGMQCvHaYLU_AI")
+    for hi in greetings:
+        if hi in mess.lower():
+            bot.sendMessage(update.message.chat_id, text='Рад видеть, ' + update.message.from_user.first_name)
+            bot.sendSticker(update.message.chat_id, "BQADAgADBwADW__yCiAy3DULmbfPAg")
 
 
-def sticker_echo(bot, update):
-
-    bot.sendMessage(update.message.chat_id, text="Айдишник стикера:")
-    bot.sendMessage(update.message.chat_id, text=update.message.sticker.file_id)
+# def sticker_echo(bot, update):
+#     # bot.sendMessage(update.message.chat_id, text="Айдишник этого стикера:")
+#     # bot.sendMessage(update.message.chat_id, text=update.message.sticker.file_id)
 
 
 def error(bot, update, error):
@@ -80,7 +76,7 @@ def main():
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler([Filters.text], text_echo))
-    dp.add_handler(MessageHandler([Filters.sticker], sticker_echo))
+    # dp.add_handler(MessageHandler([Filters.sticker], sticker_echo))
 
     # log all errors
     dp.add_error_handler(error)
@@ -95,4 +91,8 @@ def main():
 
 
 if __name__ == '__main__':
+    commands = open("help_command.txt", "r")
+    description = open("bot_description", "r")
+    greetings = ["hello", "привет", "ку", "драсьте", "дравствуйте", "hi"]
     main()
+    commands.close()
