@@ -31,7 +31,7 @@ logger = logging.getLogger(__name__)
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
-    txt = "<em>" + "Hey, " + update.message.from_user.first_name + "! " + "".join(
+    txt = "<em>" + "Hey, </em><b>" + update.message.from_user.first_name + "</b><em>! " + "".join(
         description.readlines()) + "</em>"
     bot.sendMessage(update.message.chat_id,
                     text=txt,
@@ -39,7 +39,7 @@ def start(bot, update):
 
 
 def help(bot, update):
-    bot.sendMessage(update.message.chat_id, "".join(commands))
+    bot.sendMessage(update.message.chat_id, "".join(commands), parse_mode="HTML")
 
 
 def schedule(bot, update):
