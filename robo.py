@@ -19,6 +19,7 @@ bot.
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 import json
+import random
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -37,6 +38,7 @@ def start(bot, update):
 def help(bot, update):
     bot.sendMessage(update.message.chat_id, "".join(commands))
 
+
 def schedule(bot, update):
     bot.sendMessage(update.message.chat_id, text='Расписание уроков: бла-бла-бла')
 
@@ -44,14 +46,22 @@ def schedule(bot, update):
 def text_echo(bot, update):
     mess = update.message.text
     for hi in greetings:
-        if hi in mess.lower():
-            bot.sendMessage(update.message.chat_id, text='Рад видеть, ' + update.message.from_user.first_name)
-            bot.sendSticker(update.message.chat_id, "BQADAgADBwADW__yCiAy3DULmbfPAg")
+        if len(mess) >= len(hi) and mess.lower()[:len(hi)] == hi:
+
+            if update.message.from_user.id == 211754983:
+                sticker = el_stickers[random.randint(0, len(el_stickers) - 1)]
+                bot.sendMessage(update.message.chat_id, text='Здравствуй, создатель')
+                bot.sendSticker(update.message.chat_id, sticker)
+            else:
+                sticker = stickers[random.randint(0, len(stickers) - 1)]
+                bot.sendMessage(update.message.chat_id, text='Рад видеть, ' + update.message.from_user.first_name)
+                bot.sendSticker(update.message.chat_id, sticker)
+            break
 
 
-# def sticker_echo(bot, update):
-#     # bot.sendMessage(update.message.chat_id, text="Айдишник этого стикера:")
-#     # bot.sendMessage(update.message.chat_id, text=update.message.sticker.file_id)
+def sticker_echo(bot, update):
+    bot.sendMessage(update.message.chat_id, text="Айдишник этого стикера:")
+    bot.sendMessage(update.message.chat_id, text=update.message.sticker.file_id)
 
 
 def error(bot, update, error):
@@ -75,7 +85,7 @@ def main():
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler([Filters.text], text_echo))
-    # dp.add_handler(MessageHandler([Filters.sticker], sticker_echo))
+    dp.add_handler(MessageHandler([Filters.sticker], sticker_echo))
 
     # log all errors
     dp.add_error_handler(error)
@@ -90,8 +100,14 @@ def main():
 
 
 if __name__ == '__main__':
+    hello_stickers = open("hello_stickers.txt", "r")
+    elite_stickers = open("elite_stickers.txt", "r")
+    stickers = [s[:-1] for s in hello_stickers.readlines()]
+    el_stickers = [s[:-1] for s in elite_stickers.readlines()]
+
     commands = open("help_command.txt", "r")
     description = open("bot_description", "r")
-    greetings = ["hello", "привет", "ку", "драсьте", "дравствуйте", "hi"]
+    greetings = ["hello", "привет", "драсьте", "дравствуйте", "hi", "дарова", "здравствуйте"]
     main()
     commands.close()
+    hello_stickers.close()
