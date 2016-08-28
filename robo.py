@@ -29,22 +29,34 @@ logger = logging.getLogger(__name__)
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
-
     txt = "<b>Hello</b>"
-
-
     bot.sendMessage(update.message.chat_id, text=txt, parse_mode="HTML")
 
+
 def help(bot, update):
-    bot.sendMessage(update.message.chat_id, text='Help!')
+    bot.sendMessage(update.message.chat_id, text="Доступные команды бота:")
+    bot
+
 
 def schedule(bot, update):
-    bot.sendMessage(update.message.chat_id, text='Расписание уроков: ...')
+    bot.sendMessage(update.message.chat_id, text='Расписание уроков: бла-бла-бла')
 
-def echo(bot, update):
-    if update.message.text.lower() == "hello":
-        bot.sendMessage(update.message.chat_id, text='Hi-hi!' + update.message.contact)
-    bot.sendMessage(update.message.chat_id, text='WAT? Ты что несешь? ' + update.message.text)
+
+def text_echo(bot, update):
+    print(update.message)
+    print(type(update.message))
+    print(update.message["from"])
+    mess = update.message.text
+    if mess.lower() == "hello" or mess.lower() == "привет":
+            # print(update.message.From.username)
+        bot.sendMessage(update.message.chat_id, text='Hi-hi')
+        bot.sendSticker(update.message.chat_id, "BQADAgADQAADyIsGAAGMQCvHaYLU_AI")
+
+
+def sticker_echo(bot, update):
+
+    bot.sendMessage(update.message.chat_id, text="Айдишник стикера:")
+    bot.sendMessage(update.message.chat_id, text=update.message.sticker.file_id)
 
 
 def error(bot, update, error):
@@ -64,10 +76,11 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(CommandHandler("schedule", schedule))
+    dp.add_handler(CommandHandler("timetable", schedule))
 
     # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler([Filters.text], echo))
+    dp.add_handler(MessageHandler([Filters.text], text_echo))
+    dp.add_handler(MessageHandler([Filters.sticker], sticker_echo))
 
     # log all errors
     dp.add_error_handler(error)
@@ -83,4 +96,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
