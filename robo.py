@@ -92,6 +92,14 @@ def schedule(bot, update):
     bot.sendMessage(update.message.chat_id, text='Расписание уроков:')
 
 
+def get_mates(bot, update):
+    ans = ""
+    for mate in range(len(mates)):
+        ans += str(mate + 1) + ". " + mates[mate] + "\n"
+    bot.sendMessage(update.message.chat_id, text='Состав класса 8-1:')
+    bot.sendMessage(update.message.chat_id, text=ans)
+
+
 def text_echo(bot, update):
     mess = update.message.text
     for hi in greetings:
@@ -135,6 +143,7 @@ def main():
     dp.add_handler(CommandHandler("timetable", schedule))
     dp.add_handler(CommandHandler("set", set, pass_args=True, pass_job_queue=True))
     dp.add_handler(CommandHandler("unset", unset, pass_job_queue=True))
+    dp.add_handler(CommandHandler("mates", get_mates))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler([Filters.text], text_echo))
@@ -160,6 +169,9 @@ if __name__ == '__main__':
     hello_stickers.close()
     elite_stickers.close()
 
+    cm = open("data/classmates.txt", "r")
+    mates = [s[:-1] for s in cm.readlines()]
+
     commands = open("data/help_command.txt", "r")
     cmd = commands.readlines()
     commands.close()
@@ -173,5 +185,3 @@ if __name__ == '__main__':
     hellowrds.close()
 
     main()
-
-
