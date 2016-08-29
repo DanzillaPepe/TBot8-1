@@ -17,7 +17,7 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 
-from telegram import (ReplyKeyboardMarkup)
+from telegram import (ReplyKeyboardMarkup, ReplyKeyboardHide, KeyboardButton)
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, RegexHandler,
                           ConversationHandler)
 
@@ -33,13 +33,12 @@ GENDER, PHOTO, LOCATION, BIO = range(4)
 
 
 def start(bot, update):
-    reply_keyboard = [['Boy', 'Girl', 'Other']]
-
+    reply_keyboard = [[KeyboardButton(text="Instinct"), KeyboardButton(text="Mystic"), KeyboardButton(text="Valor")]]
+    rkm = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
     bot.sendMessage(update.message.chat_id,
-                    text='Hi! My name is Professor Bot. I will hold a conversation with you. '
-                         'Send /cancel to stop talking to me.\n\n'
-                         'Are you a boy or a girl?',
-                    reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+                    text="Hello, I'm dino-bot made by Danzilla. Can you tell, what team are you chose in Pokemon GO?",
+                    #reply_markup=ReplyKeyboardHide(hide_keyboard=True))
+                    reply_markup=rkm)
 
     return GENDER
 

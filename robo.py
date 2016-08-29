@@ -153,22 +153,22 @@ def main():
 
 
 if __name__ == '__main__':
-    hello_stickers = open("hello_stickers.txt", "r")
-    elite_stickers = open("elite_stickers.txt", "r")
+    hello_stickers = open("data/stickers/hello_stickers.txt", "r")
+    elite_stickers = open("data/stickers/elite_stickers.txt", "r")
     stickers = [s[:-1] for s in hello_stickers.readlines()]
     el_stickers = [s[:-1] for s in elite_stickers.readlines()]
     hello_stickers.close()
     elite_stickers.close()
 
-    commands = open("help_command.txt", "r")
+    commands = open("data/help_command.txt", "r")
     cmd = commands.readlines()
     commands.close()
 
-    description = open("bot_description", "r")
+    description = open("data/bot_description", "r")
     dsc = description.readlines()
     description.close()
 
-    hellowrds = open("hello_words.txt", "r")
+    hellowrds = open("data/hello_words.txt", "r")
     greetings = [s[:-1] for s in hellowrds.readlines()]
     hellowrds.close()
 
