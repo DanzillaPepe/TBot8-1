@@ -19,12 +19,12 @@ bot.
 
 from telegram.ext import Updater, CommandHandler, Job
 import logging
-
+log = open("timebot_log.txt", "w")
 # Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.DEBUG)
-
-logger = logging.getLogger(__name__)
+# logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+#                     level=logging.DEBUG)
+#
+# logger = logging.getLogger(__name__)
 timers = dict()
 
 
@@ -76,11 +76,15 @@ def unset(bot, update, job_queue):
 
 
 def error(bot, update, error):
-    logger.warn('Update "%s" caused error "%s"' % (update, error))
+    pass
+    # logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 
 def main():
-    updater = Updater("TOKEN")
+    token = open("../token.txt", "r")
+    log = open("timebot_log.txt", "w")
+    updater = Updater(token.readline())
+    token.close()
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
@@ -103,5 +107,7 @@ def main():
     updater.idle()
 
 
+
 if __name__ == '__main__':
     main()
+    log.close()

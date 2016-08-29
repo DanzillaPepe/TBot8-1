@@ -16,11 +16,13 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Job
 import logging
 import json
 import random
 
+# timers in different chats
+timers = dict()
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -30,16 +32,57 @@ logger = logging.getLogger(__name__)
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
+
+def alarm(bot, job):
+    """Function to send the alarm message"""
+    bot.sendMessage(job.context, text='Бип-бип! Таймер сработал!')
+
+
+def set(bot, update, args, job_queue):
+    """Adds a job to the queue"""
+    chat_id = update.message.chat_id
+    try:
+        # args[0] should contain the time for the timer in seconds
+        due = int(args[0])
+        if due < 0:
+            bot.sendMessage(chat_id, text='Мы пока что не можем лететь в прошлое!')
+            return
+
+        # Add job to queue
+        job = Job(alarm, due, repeat=False, context=chat_id)
+        timers[chat_id] = job
+        job_queue.put(job)
+
+        bot.sendMessage(chat_id, text='Таймер установлен!')
+
+    except (IndexError, ValueError):
+        bot.sendMessage(chat_id, text='Используй формат: /set <seconds>')
+
+
+def unset(bot, update, job_queue):
+    """Removes the job if the user changed their mind"""
+    chat_id = update.message.chat_id
+
+    if chat_id not in timers:
+        bot.sendMessage(chat_id, text='У вас нет активных таймеров')
+        return
+
+    job = timers[chat_id]
+    job.schedule_removal()
+    del timers[chat_id]
+
+    bot.sendMessage(chat_id, text='Таймер остановлен!')
+
+
 def start(bot, update):
-    txt = "<em>" + "Hey, </em><b>" + update.message.from_user.first_name + "</b><em>! " + "".join(
-        description.readlines()) + "</em>"
+    txt = "" + "Hey, " + update.message.from_user.first_name + "! " + "".join(
+        description.readlines())
     bot.sendMessage(update.message.chat_id,
-                    text=txt,
-                    parse_mode="HTML")
+                    text=txt)
 
 
 def help(bot, update):
-    bot.sendMessage(update.message.chat_id, "".join(commands), parse_mode="HTML")
+    bot.sendMessage(update.message.chat_id, "".join(commands))
 
 
 def schedule(bot, update):
@@ -86,6 +129,8 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("timetable", schedule))
+    dp.add_handler(CommandHandler("set", set, pass_args=True, pass_job_queue=True))
+    dp.add_handler(CommandHandler("unset", unset, pass_job_queue=True))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler([Filters.text], text_echo))
