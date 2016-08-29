@@ -79,8 +79,7 @@ def unset(bot, update, job_queue):
 
 
 def start(bot, update):
-    txt = "" + "Hey, " + update.message.from_user.first_name + "! " + start_em + " " + "".join(
-        description.readlines())
+    txt = "" + "Hey, " + update.message.from_user.first_name + "! " + start_em + " " + "".join(dsc)
     bot.sendMessage(update.message.chat_id,
                     text=txt)
 
@@ -158,13 +157,21 @@ if __name__ == '__main__':
     elite_stickers = open("elite_stickers.txt", "r")
     stickers = [s[:-1] for s in hello_stickers.readlines()]
     el_stickers = [s[:-1] for s in elite_stickers.readlines()]
+    hello_stickers.close()
+    elite_stickers.close()
 
     commands = open("help_command.txt", "r")
     cmd = commands.readlines()
-    description = open("bot_description", "r")
-    hellowrds = open("hello_words.txt", "r")
-
-    greetings = [s[:-1] for s in hellowrds.readlines()]
-    main()
     commands.close()
-    hello_stickers.close()
+
+    description = open("bot_description", "r")
+    dsc = description.readlines()
+    description.close()
+
+    hellowrds = open("hello_words.txt", "r")
+    greetings = [s[:-1] for s in hellowrds.readlines()]
+    hellowrds.close()
+
+    main()
+
+
