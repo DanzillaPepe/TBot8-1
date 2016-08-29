@@ -98,6 +98,7 @@ def text_echo(bot, update):
                 sticker = el_stickers[random.randint(0, len(el_stickers) - 1)]
                 bot.sendMessage(update.message.chat_id, text='Здравствуй, создатель')
                 bot.sendSticker(update.message.chat_id, sticker)
+
             else:
                 sticker = stickers[random.randint(0, len(stickers) - 1)]
                 bot.sendMessage(update.message.chat_id, text='Рад видеть, ' + update.message.from_user.first_name)
@@ -156,7 +157,9 @@ if __name__ == '__main__':
 
     commands = open("help_command.txt", "r")
     description = open("bot_description", "r")
-    greetings = ["hello", "привет", "драсьте", "дравствуйте", "hi", "дарова", "здравствуйте"]
+    hellowrds = open("hello_words.txt", "r")
+
+    greetings = [s[:-1] for s in hellowrds.readlines()]
     main()
     commands.close()
     hello_stickers.close()
