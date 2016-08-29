@@ -20,6 +20,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Job
 import logging
 import json
 import random
+from telegram.emoji import Emoji
 
 # timers in different chats
 timers = dict()
@@ -28,6 +29,9 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+evil_em = Emoji.SMILING_FACE_WITH_HORNS
+start_em = Emoji.SMILING_FACE_WITH_OPEN_MOUTH
+help_em = Emoji.SMILING_FACE_WITH_SMILING_EYES
 
 
 # Define a few command handlers. These usually take the two arguments bot and
@@ -75,14 +79,14 @@ def unset(bot, update, job_queue):
 
 
 def start(bot, update):
-    txt = "" + "Hey, " + update.message.from_user.first_name + "! " + "".join(
+    txt = "" + "Hey, " + update.message.from_user.first_name + "! " + start_em + " " + "".join(
         description.readlines())
     bot.sendMessage(update.message.chat_id,
                     text=txt)
 
 
 def help(bot, update):
-    bot.sendMessage(update.message.chat_id, "".join(commands))
+    bot.sendMessage(update.message.chat_id, "".join([cmd[0][:-1]] + [" " + help_em] + ["\n"] + cmd[1:]))
 
 
 def schedule(bot, update):
@@ -96,7 +100,7 @@ def text_echo(bot, update):
 
             if update.message.from_user.id == 211754983:
                 sticker = el_stickers[random.randint(0, len(el_stickers) - 1)]
-                bot.sendMessage(update.message.chat_id, text='Здравствуй, создатель')
+                bot.sendMessage(update.message.chat_id, text='Здравствуй, создатель ' + evil_em)
                 bot.sendSticker(update.message.chat_id, sticker)
 
             else:
@@ -156,6 +160,7 @@ if __name__ == '__main__':
     el_stickers = [s[:-1] for s in elite_stickers.readlines()]
 
     commands = open("help_command.txt", "r")
+    cmd = commands.readlines()
     description = open("bot_description", "r")
     hellowrds = open("hello_words.txt", "r")
 

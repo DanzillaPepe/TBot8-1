@@ -117,8 +117,10 @@ def error(bot, update, error):
 
 
 def main():
+    tk = open("../token.txt", "r")
     # Create the EventHandler and pass it your bot's token.
-    updater = Updater("TOKEN")
+    updater = Updater(tk.readline())
+    tk.close()
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
