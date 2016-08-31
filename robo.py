@@ -79,20 +79,24 @@ def unset(bot, update, job_queue):
 
 
 def start(bot, update):
+    chat_id = update.message.chat_id
     txt = "" + "Hey, " + update.message.from_user.first_name + "! " + start_em + " " + "".join(dsc)
     bot.sendMessage(update.message.chat_id,
                     text=txt)
 
 
 def help(bot, update):
+    chat_id = update.message.chat_id
     bot.sendMessage(update.message.chat_id, "".join([cmd[0][:-1]] + [" " + help_em] + ["\n"] + cmd[1:]))
 
 
 def schedule(bot, update):
+    chat_id = update.message.chat_id
     bot.sendMessage(update.message.chat_id, text='Расписание уроков:')
 
 
 def get_mates(bot, update):
+    chat_id = update.message.chat_id
     ans = ""
     for mate in range(len(mates)):
         ans += str(mate + 1) + ". " + mates[mate] + "\n"
@@ -101,6 +105,7 @@ def get_mates(bot, update):
 
 
 def text_echo(bot, update):
+    chat_id = update.message.chat_id
     mess = update.message.text
     for hi in greetings:
         if len(mess) >= len(hi) and mess.lower()[:len(hi)] == hi:
@@ -118,6 +123,7 @@ def text_echo(bot, update):
 
 
 def sticker_echo(bot, update):
+    chat_id = update.message.chat_id
     if update.message.chat.id == 211754983:
         bot.sendMessage(update.message.chat_id, text="Айдишник этого стикера:")
         bot.sendMessage(update.message.chat_id, text=update.message.sticker.file_id)

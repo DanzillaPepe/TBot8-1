@@ -5,7 +5,7 @@
 # This program is dedicated to the public domain under the CC0 license.
 
 import logging
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InlineQuery
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -19,6 +19,7 @@ def start(bot, update):
                 [InlineKeyboardButton("Option 3", callback_data='3')]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
+
 
     bot.sendMessage(update.message.chat_id, text="Please choose:", reply_markup=reply_markup)
 
@@ -40,7 +41,9 @@ def error(bot, update, error):
 
 
 # Create the Updater and pass it your bot's token.
-updater = Updater("TOKEN")
+tk = open("../token.txt")
+updater = Updater(tk.readline())
+tk.close()
 
 updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.dispatcher.add_handler(CallbackQueryHandler(button))
