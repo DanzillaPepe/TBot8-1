@@ -17,8 +17,8 @@ bot.
 """
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Job
+from data import id
 import logging
-import json
 import random
 from telegram.emoji import Emoji
 
@@ -81,7 +81,7 @@ def unset(bot, update, job_queue):
 def start(bot, update):
     chat_id = update.message.chat_id
     txt = "" + "Hey, " + update.message.from_user.first_name + "! " + start_em + " " + "".join(dsc)
-    bot.sendMessage(update.message.chat_id,
+    bot.sendMessage(chat_id,
                     text=txt)
 
 
@@ -90,18 +90,35 @@ def help(bot, update):
     bot.sendMessage(update.message.chat_id, "".join([cmd[0][:-1]] + [" " + help_em] + ["\n"] + cmd[1:]))
 
 
-def schedule(bot, update):
-    chat_id = update.message.chat_id
-    bot.sendMessage(update.message.chat_id, text='Расписание уроков:')
+def get_timetable(bot, update, args):
+    chat_id = update.message.from_user.id
+    if not args:
+        bot.sendMessage(chat_id, text='<strong>Расписание уроков класса 8-1:</strong>', parse_mode="HTML")
+        for day in range(len(days)):
+            bot.sendMessage(chat_id, text='<b>' + days[day] + ':</b>', parse_mode="HTML")
+            bot.sendMessage(chat_id,
+                            "\n".join([str(i + 1) + ". " + timetable[day][i] for i in range(len(timetable[day]))]))
+    else:
+        try:
+            day = int(args[0])
+            if day > len(days) or day < 1:
+                bot.sendMessage(chat_id, text="Используй формат: /timet <?day at 1 to 6>")
+                return
+            day -= 1
+            bot.sendMessage(chat_id, text='<b>Расписание на ' + days[day].lower() + ':</b>', parse_mode="HTML")
+            bot.sendMessage(chat_id,
+                            "\n".join([str(i + 1) + ". " + timetable[day][i] for i in range(len(timetable[day]))]))
+        except (ValueError, KeyError, IndexError):
+            bot.sendMessage(chat_id, text="Используй формат: /timet <?day at 1 to 6>")
 
 
 def get_mates(bot, update):
-    chat_id = update.message.chat_id
+    chat_id = update.message.from_user.id
     ans = ""
     for mate in range(len(mates)):
         ans += str(mate + 1) + ". " + mates[mate] + "\n"
-    bot.sendMessage(update.message.chat_id, text='Состав класса 8-1:')
-    bot.sendMessage(update.message.chat_id, text=ans)
+    bot.sendMessage(chat_id, text='<strong>Состав класса 8-1:</strong>', parse_mode="HTML")
+    bot.sendMessage(chat_id, text=ans)
 
 
 def text_echo(bot, update):
@@ -109,24 +126,23 @@ def text_echo(bot, update):
     mess = update.message.text
     for hi in greetings:
         if len(mess) >= len(hi) and mess.lower()[:len(hi)] == hi:
-
-            if update.message.from_user.id == 211754983:
+            if update.message.from_user.id == id.MY_ID:
                 sticker = el_stickers[random.randint(0, len(el_stickers) - 1)]
-                bot.sendMessage(update.message.chat_id, text='Здравствуй, создатель ' + evil_em)
-                bot.sendSticker(update.message.chat_id, sticker)
+                bot.sendMessage(chat_id, text='Здравствуй, создатель ' + evil_em)
+                bot.sendSticker(chat_id, sticker)
 
             else:
                 sticker = stickers[random.randint(0, len(stickers) - 1)]
-                bot.sendMessage(update.message.chat_id, text='Рад видеть, ' + update.message.from_user.first_name)
-                bot.sendSticker(update.message.chat_id, sticker)
+                bot.sendMessage(chat_id, text='Рад видеть, ' + update.message.from_user.first_name)
+                bot.sendSticker(chat_id, sticker)
             break
 
 
 def sticker_echo(bot, update):
     chat_id = update.message.chat_id
-    if update.message.chat.id == 211754983:
-        bot.sendMessage(update.message.chat_id, text="Айдишник этого стикера:")
-        bot.sendMessage(update.message.chat_id, text=update.message.sticker.file_id)
+    if update.message.chat.id == id.MY_ID:
+        bot.sendMessage(chat_id, text="Айдишник этого стикера:")
+        bot.sendMessage(chat_id, text=update.message.sticker.file_id)
 
 
 def error(bot, update, error):
@@ -146,7 +162,7 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
-    dp.add_handler(CommandHandler("timetable", schedule))
+    dp.add_handler(CommandHandler("timet", get_timetable, pass_args=True))
     dp.add_handler(CommandHandler("set", set, pass_args=True, pass_job_queue=True))
     dp.add_handler(CommandHandler("unset", unset, pass_job_queue=True))
     dp.add_handler(CommandHandler("mates", get_mates))
@@ -174,6 +190,16 @@ if __name__ == '__main__':
     el_stickers = [s[:-1] for s in elite_stickers.readlines()]
     hello_stickers.close()
     elite_stickers.close()
+
+    timeT = open("data/timetable.txt", "r")
+    timetable = {}
+    days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
+    for day in range(len(days)):
+        read_line = timeT.readline()
+        timetable[day] = []
+        while read_line != "D\n":
+            timetable[day].append(read_line[:-1])
+            read_line = timeT.readline()
 
     cm = open("data/classmates.txt", "r")
     mates = [s[:-1] for s in cm.readlines()]

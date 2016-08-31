@@ -1,7 +1,7 @@
 Я ещё мало что умею, но я буду учиться и уже скоро буду полезным помощником
 Список команд бота:
 /start - start chatting (начать общение)
-/timetable - get school timetable (получить школьное расписание)
+/timet <?day> - get school timetable for all week or work day at 1 to 6 (получить школьное расписание за всю неделю или на определенный рабочий день от 1 до 6)
 /set <seconds> - set a timer for fixed time in seconds (установить таймер на введенное неотрицательное колличество секунд)
 /unset - unset the timer (остановить таймер)
 /mates - get classmates list (получить состав класса 8-1)
