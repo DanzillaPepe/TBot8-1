@@ -112,6 +112,7 @@ def get_timetable(bot, update, args):
             bot.sendMessage(chat_id, text="Используй формат: /timet <?day at 1 to 6>")
 
 
+
 def get_mates(bot, update):
     chat_id = update.message.from_user.id
     ans = ""
