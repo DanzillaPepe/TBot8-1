@@ -15,7 +15,10 @@ update_id = None
 def main():
     global update_id
     # Telegram Bot Authorization Token
-    bot = telegram.Bot(token=<TOKENNAME>)
+    f = open("../token.txt", "r")
+    token = f.readline()
+    f.close()
+    bot = telegram.Bot(token=token)
 
     # get the first pending update_id, this is so we can skip over it in case
     # we get an "Unauthorized" exception.
