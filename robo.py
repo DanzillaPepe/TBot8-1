@@ -105,7 +105,10 @@ def get_timetable(bot, update, args):
                 bot.sendMessage(chat_id, text="Используй формат: /timet <?day at 1 to 6>")
                 return
             day -= 1
-            bot.sendMessage(chat_id, text='<b>Расписание на ' + days[day].lower() + ':</b>', parse_mode="HTML")
+            right_day = days[day].lower()
+            if right_day[-1] == "а":
+                right_day = right_day[:-1] + "у"
+            bot.sendMessage(chat_id, text='<b>Расписание на ' + right_day + ':</b>', parse_mode="HTML")
             bot.sendMessage(chat_id,
                             "\n".join([str(i + 1) + ". " + timetable[day][i] for i in range(len(timetable[day]))]))
         except (ValueError, KeyError, IndexError):
