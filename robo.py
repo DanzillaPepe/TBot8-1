@@ -185,14 +185,14 @@ def main():
 
 
 if __name__ == '__main__':
-    hello_stickers = open("data/stickers/hello_stickers.txt", "r")
-    elite_stickers = open("data/stickers/elite_stickers.txt", "r")
+    hello_stickers = open("data/stickers/hello_stickers.txt", "r", encoding="utf-8")
+    elite_stickers = open("data/stickers/elite_stickers.txt", "r", encoding="utf-8")
     stickers = [s[:-1] for s in hello_stickers.readlines()]
     el_stickers = [s[:-1] for s in elite_stickers.readlines()]
     hello_stickers.close()
     elite_stickers.close()
 
-    timeT = open("data/timetable.txt", "r")
+    timeT = open("data/timetable.txt", "r", )
     timetable = {}
     days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
     for day in range(len(days)):
@@ -204,15 +204,15 @@ if __name__ == '__main__':
 
     cm = open("data/classmates.txt", "r")
     mates = [s[:-1] for s in cm.readlines()]
-    commands = open("data/help_command.txt", "r")
+    commands = open("data/help_command.txt", "r", encoding="utf-8")
     cmd = commands.readlines()
     commands.close()
 
-    description = open("data/bot_description", "r")
+    description = open("data/bot_description", "r", encoding="utf-8")
     dsc = description.readlines()
     description.close()
 
-    hellowrds = open("data/hello_words.txt", "r")
+    hellowrds = open("data/hello_words.txt", "r", encoding="utf-8")
     greetings = [s[:-1] for s in hellowrds.readlines()]
     hellowrds.close()
 
