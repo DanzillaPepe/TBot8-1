@@ -192,7 +192,7 @@ if __name__ == '__main__':
     hello_stickers.close()
     elite_stickers.close()
 
-    timeT = open("data/timetable.txt", "r", )
+    timeT = open("data/timetable.txt", "r", encoding="utf-8")
     timetable = {}
     days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"]
     for day in range(len(days)):
@@ -202,7 +202,7 @@ if __name__ == '__main__':
             timetable[day].append(read_line[:-1])
             read_line = timeT.readline()
 
-    cm = open("data/classmates.txt", "r")
+    cm = open("data/classmates.txt", "r", encoding="utf-8")
     mates = [s[:-1] for s in cm.readlines()]
     commands = open("data/help_command.txt", "r", encoding="utf-8")
     cmd = commands.readlines()
