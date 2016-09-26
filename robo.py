@@ -215,5 +215,5 @@ if __name__ == '__main__':
     hellowrds = open("data/hello_words.txt", "r", encoding="utf-8")
     greetings = [s[:-1] for s in hellowrds.readlines()]
     hellowrds.close()
-
+    print("Started bot")
     main()
