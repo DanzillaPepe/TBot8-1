@@ -121,6 +121,26 @@ def get_mates(bot, update):
     bot.sendMessage(chat_id, text='<strong>Состав класса 8-1:</strong>', parse_mode="HTML")
     bot.sendMessage(chat_id, text=ans)
 
+def spam(bot, update, args):
+    chat_id = update.message.chat_id
+    if update.message.from_user.id != id.MY_ID:
+        bot.sendMessage(text="Функция недоступна", chat_id=chat_id)
+        return
+    try:
+        a = int(args[0])
+        message = " ".join(args[1:])
+    except:
+        bot.sendMessage(text="Некорректные данные", chat_id=chat_id)
+        return
+    for i in range(a):
+        bot.sendMessage(chat_id=chat_id, text=message)
+
+
+def meat(bot, update):
+    chat_id = update.message.chat_id
+    sticker = "BQADAgADCgADe20bDCFnxX39AzsdAg"
+    bot.sendSticker(chat_id, sticker)
+
 
 def text_echo(bot, update):
     chat_id = update.message.chat_id
@@ -137,6 +157,9 @@ def text_echo(bot, update):
                 bot.sendMessage(chat_id, text='Рад видеть, ' + update.message.from_user.first_name)
                 bot.sendSticker(chat_id, sticker)
             break
+    if "ты хто" in mess.lower() or "ты кто" in mess.lower():
+        sticker = "BQADBQADDAEAAukKyANFGtSvd3H9ngI"
+        bot.sendSticker(chat_id, sticker)
 
 
 def sticker_echo(bot, update):
@@ -167,6 +190,8 @@ def main():
     dp.add_handler(CommandHandler("set", set, pass_args=True, pass_job_queue=True))
     dp.add_handler(CommandHandler("unset", unset, pass_job_queue=True))
     dp.add_handler(CommandHandler("mates", get_mates))
+    dp.add_handler(CommandHandler("мясо", meat))
+    dp.add_handler(CommandHandler("spam", spam, pass_args=True))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler([Filters.text], text_echo))

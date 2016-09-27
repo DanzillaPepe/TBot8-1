@@ -5,3 +5,4 @@
 /set <seconds> - set a timer for fixed time in seconds (установить таймер на введенное неотрицательное колличество секунд)
 /unset - unset the timer (остановить таймер)
 /mates - get classmates list (получить состав класса 8-1)
+/мясо – мясо
