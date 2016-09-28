@@ -36,8 +36,11 @@ help_em = Emoji.SMILING_FACE_WITH_SMILING_EYES
 # update. Error handlers also receive the raised TelegramError object in error.
 
 def alarm(bot, job):
+    chat_id = job.context
     """Function to send the alarm message"""
     bot.sendMessage(job.context, text='Бип-бип! Таймер сработал!')
+    del timers[chat_id]
+
 
 
 def set(bot, update, args, job_queue):
@@ -48,6 +51,9 @@ def set(bot, update, args, job_queue):
         due = int(args[0])
         if due < 0:
             bot.sendMessage(chat_id, text='Мы пока что не можем лететь в прошлое!')
+            return
+        if due > 3600 * 24 * 31:
+            bot.sendMessage(chat_id, text='Слишком большое время!')
             return
 
         # Add job to queue
