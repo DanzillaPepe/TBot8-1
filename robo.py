@@ -42,7 +42,6 @@ def alarm(bot, job):
     del timers[chat_id]
 
 
-
 def set(bot, update, args, job_queue):
     """Adds a job to the queue"""
     chat_id = update.message.chat_id
@@ -126,6 +125,7 @@ def get_mates(bot, update):
         ans += str(mate + 1) + ". " + mates[mate] + "\n"
     bot.sendMessage(chat_id, text='<strong>Состав класса 8-1:</strong>', parse_mode="HTML")
     bot.sendMessage(chat_id, text=ans)
+
 
 def spam(bot, update, args):
     chat_id = update.message.chat_id
