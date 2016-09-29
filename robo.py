@@ -150,8 +150,6 @@ def meat(bot, update):
 
 
 def text_echo(bot, update):
-    if update.message.from_user.id != id.MY_ID:
-        print(update.message.from_user.first_name + ": " + str(update.message.from_user.id), file=id_to_output, flush=True)
     chat_id = update.message.chat_id
     mess = update.message.text
     for hi in greetings:
@@ -221,7 +219,6 @@ def main():
 
 
 if __name__ == '__main__':
-    id_to_output = open("ID.txt", "w")
     hello_stickers = open("data/stickers/hello_stickers.txt", "r", encoding="utf-8")
     elite_stickers = open("data/stickers/elite_stickers.txt", "r", encoding="utf-8")
     stickers = [s[:-1] for s in hello_stickers.readlines()]
