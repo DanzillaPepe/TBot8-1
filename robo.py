@@ -129,12 +129,13 @@ def get_mates(bot, update):
 
 def spam(bot, update, args):
     chat_id = update.message.chat_id
-    if update.message.from_user.id != id.MY_ID:
-        bot.sendMessage(text="Функция недоступна", chat_id=chat_id)
-        return
+    fromed = update.message.from_user.id
     try:
         a = int(args[0])
         message = " ".join(args[1:])
+        if fromed != id.MY_ID and (fromed != id.BORIZ_ID or (fromed == id.BORIZ_ID and a > 10)):
+            bot.sendMessage(text="Функция недоступна", chat_id=chat_id)
+            return
     except:
         bot.sendMessage(text="Некорректные данные", chat_id=chat_id)
         return
@@ -149,6 +150,8 @@ def meat(bot, update):
 
 
 def text_echo(bot, update):
+    if update.message.from_user.id != id.MY_ID:
+        print(update.message.from_user.first_name + ": " + str(update.message.from_user.id), file=id_to_output, flush=True)
     chat_id = update.message.chat_id
     mess = update.message.text
     for hi in greetings:
@@ -180,6 +183,7 @@ def error(bot, update, error):
 
 
 def main():
+
     token = open("token.txt", "r")
     token_name = token.readline()
     token.close()
@@ -216,6 +220,7 @@ def main():
 
 
 if __name__ == '__main__':
+    id_to_output = open("ID.txt", "w")
     hello_stickers = open("data/stickers/hello_stickers.txt", "r", encoding="utf-8")
     elite_stickers = open("data/stickers/elite_stickers.txt", "r", encoding="utf-8")
     stickers = [s[:-1] for s in hello_stickers.readlines()]
